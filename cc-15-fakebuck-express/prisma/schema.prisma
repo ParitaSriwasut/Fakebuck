@@ -63,7 +63,7 @@ model Friend {
   createdAt   DateTime     @default(now())
   requesterId Int
   requester   User         @relation("requester", fields: [requesterId], references: [id])
-  receiverId    git   Int
+  receiverId  Int
   receiver    User         @relation("receiver", fields: [receiverId], references: [id])
 }
 
