@@ -1,7 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { registerSchema } = require("../validators/auth-validator");
+const { registerSchema, loginSchema } = require("../validators/auth-validator");
 const prisma = require("../models/prisma");
+const createError = require("../utils/create-error");
 
 exports.register = async (req, res, next) => {
   try {
@@ -29,6 +30,34 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
+    const { value, error } = loginSchema.validate(req.body);
+    if (error) {
+      return next(error);
+    }
+    //select * from USER where email = emailOrMobile OR mobile = emailOrMObile
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [{ email: value.emailOrMobile }, { mobile: value.emailOrMobile }],
+      },
+    });
+    if (!user) {
+      //spread error to errormiddleware
+      return next(createError("invalid credential", 400));
+    }
+    const isMatch = await bcrypt.compare(value.password, user.password);
+    if (!isMatch) {
+      return next(createError("invalid credential", 400));
+    }
+    //every time that user login in server will jwt will generate access token bcs token has expire date
+    const payload = { userId: user.id };
+    const accessToken = jwt.sign(
+      payload,
+      process.env.JWT_SECRET_KEY || "ritadHellojv2",
+      {
+        expiresIn: process.env.JWT_EXPIRE,
+      }
+    );
+    res.status(200).json({ accessToken });
   } catch (err) {
     next(err);
   }
