@@ -19,6 +19,7 @@ axios.interceptors.response.use(
       removeAccessToken();
       window.location.href = "/login";
     }
+    return Promise.reject(error);
   }
 );
 export default axios;
