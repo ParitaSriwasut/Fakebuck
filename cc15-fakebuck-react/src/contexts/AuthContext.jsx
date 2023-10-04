@@ -10,7 +10,7 @@ export const AuthContext = createContext();
 
 export default function AuthContextProvider({ children }) {
   const [authUser, setAuthUser] = useState(null);
-  const [initialLoading, setinitialLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   // console.log(authUser)
 
@@ -22,15 +22,15 @@ export default function AuthContextProvider({ children }) {
           setAuthUser(result.data.user);
         })
         .finally(() => {
-          setinitialLoading(false);
+          setInitialLoading(false);
         });
     } else {
       //หากไม่set จะทำให้ อยู่หน้า loading ตลอด
-      setinitialLoading(false);
+      setInitialLoading(false);
     }
     // console.log(result.data.user)
   }, []);
-  console.log(authUser);
+  // console.log(authUser);
 
   const login = async (credential) => {
     // try { take out because we will catch at LoginFrom
@@ -54,9 +54,21 @@ export default function AuthContextProvider({ children }) {
     setAuthUser(null);
   };
 
+  const updateProfile = async (data) => {
+    const res = await axios.patch("/user", data);
+    setAuthUser({ ...authUser, ...res.data });
+  };
+
   return (
     <AuthContext.Provider
-      value={{ login, authUser, initialLoading, register, logout }}
+      value={{
+        login,
+        authUser,
+        initialLoading,
+        register,
+        logout,
+        updateProfile,
+      }}
     >
       {children}
     </AuthContext.Provider>
