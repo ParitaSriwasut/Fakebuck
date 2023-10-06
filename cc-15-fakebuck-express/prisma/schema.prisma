@@ -60,7 +60,7 @@ model Like {
 model Friend {
   id          Int          @id @default(autoincrement())
   status      FriendStatus
-  createdAt   DateTime     @default(now())
+  createAt    DateTime     @default(now())
   requesterId Int
   requester   User         @relation("requester", fields: [requesterId], references: [id])
   receiverId  Int

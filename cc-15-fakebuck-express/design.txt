@@ -29,7 +29,7 @@ GET USER PROFILE BY id
 GET /uer/:userId
 HEADER AUTHORIZATION Bearer ACCESS_TOKEN
 RESPONSE
-200{user:{id: NUmber,firstName: String,..}}
+200{user:{id: NUmber,firstName: String,..}status: 'RECEVIER}
 400 {message : String}
 401 {message: String } authenticated not accepted
 500 {message: String} server error
@@ -43,7 +43,24 @@ RESPONSE
 401 {message: String } authenticated not accepted
 500 {message: String} server error
 
-DELETE FRIEND
+REJECT REQUEST
+DELETE FRIEND/friend/:requesterId
+HEADER AUTHORIZATION Bearer ACCESS_TOKEN
+RESPONSE
+200{user:{id: NUmber,firstName: String,..}}
+400 {message : String}
+401 {message: String } authenticated not accepted
+500 {message: String} server error
+
+CANCEL REQUEST
+DELETE /friend/:receiverID/Cancel
+HEADER AUTHORIZATION Bearer ACCESS_TOKEN
+RESPONSE
+200{user:{id: NUmber,firstName: String,..}}
+400 {message : String}
+401 {message: String } authenticated not accepted
+500 {message: String} server error
+
 DELETE/friend/:targetUserId
 HEADER AUTHORIZATION Bearer ACCESS_TOKEN
 RESPONSE
@@ -55,6 +72,16 @@ RESPONSE
 ACCEPT FRIEND
 PATCH /friend/:requesterId
 HEADER AUTHORIZATION Bearer ACCESS_TOKEN
+RESPONSE
+200{user:{id: NUmber,firstName: String,..}}
+400 {message : String}
+401 {message: String } authenticated not accepted
+500 {message: String} server error
+
+CREATE POST
+POST/post
+HEADER AUTHORIZATION Bearer ACCESS_TOKEN
+BODY message
 RESPONSE
 200{user:{id: NUmber,firstName: String,..}}
 400 {message : String}

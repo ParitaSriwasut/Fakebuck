@@ -1,6 +1,6 @@
 const express = require("express");
 
-const userController = require("../controller/user-controller");
+const userController = require("../controllers/user-controller");
 const authenticateMiddleware = require("../middlewares/authenticate");
 const uploadMiddleware = require("../middlewares/upload");
 
