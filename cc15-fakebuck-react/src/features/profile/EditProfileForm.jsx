@@ -5,7 +5,7 @@ import { useAuth } from "../../hooks/use-auth";
 import { useState } from "react";
 import Loading from "../../components/Loading";
 
-export default function EditProfileForm(onSuccess) {
+export default function EditProfileForm({ onSuccess }) {
   const [loading, setLoading] = useState(false);
   const { authUser, updateProfile } = useAuth();
   console.log(authUser);
