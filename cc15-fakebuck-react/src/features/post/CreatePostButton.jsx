@@ -16,7 +16,7 @@ function Button({ children, onClick }) {
   );
 }
 
-export default function CreatePostButton() {
+export default function CreatePostButton({ createPost }) {
   const { authUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -33,7 +33,7 @@ export default function CreatePostButton() {
         maxWidth={32}
         onClose={() => setIsOpen(false)}
       >
-        <PostForm onSuccess={() => setIsOpen(false)} />
+        <PostForm onSuccess={() => setIsOpen(false)} onSubmit={createPost} />
       </Modal>
     </div>
   );

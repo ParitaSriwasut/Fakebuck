@@ -2,14 +2,24 @@ import { Link } from "react-router-dom";
 import Avatar from "../../components/Avatar";
 import { EllipsisIcon } from "../../icons";
 import formatTimeAgo from "../../utils/time-ago";
+import useDropDown from "../../hooks/use-dropDown";
+import { useAuth } from "../../hooks/use-auth";
 
-export default function PostHeader({ postObj }) {
+export default function PostHeader({ postObj, deletePost }) {
+  const { dropDownEl, isOpen, setIsOpen } = useDropDown();
+  const { authUser } = useAuth();
+
+  const handleClickDelete = () => {
+    deletePost(postObj.id);
+  };
+
   return (
     <div className="flex gap-3">
       <Link to={`/profile/${postObj.user.id}`}>
         <Avatar src={postObj.user.profileImage} />
       </Link>
 
+      {/* คลิกชื่อแล้ว link ไปได้ */}
       <div className="flex flex-col flex-1">
         <Link
           to={`/profile/${postObj.user.id}`}
@@ -18,22 +28,36 @@ export default function PostHeader({ postObj }) {
           {postObj.user.firstName} {postObj.user.lastName}
         </Link>
         <small className="text-gray-500 text-xs">
-          {formatTimeAgo(postObj.createAt)}
+          {formatTimeAgo(postObj.createdAt)}
         </small>
       </div>
-      <div className="relative">
-        <div className="h-8 w-8 bg-gray-100 hover:bg-gray-200 cursor-pointer rounded-full flex items-center justify-center">
-          <EllipsisIcon className="fill-gray-500" />
+
+      {/* Edit */}
+      {authUser.id === postObj.user.id && (
+        <div className="relative" ref={dropDownEl}>
+          <div
+            className="h-8 w-8 bg-gray-100 hover:bg-gray-200 cursor-pointer rounded-full flex items-center justify-center"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <EllipsisIcon className="fill-gray-500" />
+          </div>
+
+          {/* Dropdown */}
+          {isOpen && (
+            <ul className="bg-white absolute right-0 translate-y-1 border rounded-lg p-2 shadow w-36">
+              <li className="hover:bg-gray-200 rounded-lg p-2 text-sm font-semibold cursor-pointer">
+                Edit
+              </li>
+              <li
+                className="hover:bg-gray-200 rounded-lg p-2 text-sm font-semibold cursor-pointer"
+                onClick={handleClickDelete}
+              >
+                Delete
+              </li>
+            </ul>
+          )}
         </div>
-        <ul className="bg-white absolute right-0 translate-y-1 border rounded-lg p-2 shadow w-36 hidden">
-          <li className="hover:bg-gray-200 rounded-lg p-2 text-sm font-semibold cursor-pointer">
-            Edit
-          </li>
-          <li className="hover:bg-gray-200 rounded-lg p-2 text-sm font-semibold cursor-pointer">
-            Delete
-          </li>
-        </ul>
-      </div>
+      )}
     </div>
   );
 }

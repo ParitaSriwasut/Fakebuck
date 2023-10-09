@@ -10,7 +10,6 @@ export default function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
 
   const dropDownEl = useRef(null);
-  // console.log(dropDownEl);
 
   const { logout, authUser } = useAuth();
 
